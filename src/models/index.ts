@@ -74,6 +74,43 @@ export interface FeedbackResponse {
     current_user_id?: string;
 }
 
+export type FeedbackSortOption =
+    "mostUpvotes" | "leastUpvotes" | "mostComments" | "leastComments";
+
+export interface FeedbackListQuery {
+    limit?: number;
+    cursor?: string;
+    sort?: FeedbackSortOption;
+    category?: FeedbackCategory | "all";
+    status?: FeedbackStatus;
+}
+
+export interface FeedbackCursorPayload {
+    id: string;
+    upvotes: number;
+    comments: number;
+    sort: FeedbackSortOption;
+}
+
+export interface FeedbackStatusCounts {
+    suggestion: number;
+    planned: number;
+    progress: number;
+    live: number;
+}
+
+export interface PaginatedFeedbackResponse {
+    data: FeedbackResponse[];
+    nextCursor: string | null;
+    hasMore: boolean;
+    total: number;
+    statusCounts: FeedbackStatusCounts;
+}
+
+export interface FeedbackWithVotesAndComments extends FeedbackWithVotes {
+    comment_count: number;
+}
+
 export interface NestedComment {
     id: string;
     feedback_id: string;

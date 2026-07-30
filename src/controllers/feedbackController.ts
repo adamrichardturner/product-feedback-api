@@ -70,9 +70,103 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 export const getAllFeedback = async (req: Request, res: Response) => {
     try {
-        const feedback = await FeedbackService.getAllFeedback(req.user?.id);
+        const limitParam = req.query.limit;
+        const cursorParam = req.query.cursor;
+        const sortParam = req.query.sort;
+        const categoryParam = req.query.category;
+        const statusParam = req.query.status;
+
+        const isPaginatedRequest =
+            typeof limitParam === "string" ||
+            typeof cursorParam === "string" ||
+            typeof sortParam === "string" ||
+            typeof categoryParam === "string" ||
+            typeof statusParam === "string";
+
+        if (!isPaginatedRequest) {
+            const feedback = await FeedbackService.getAllFeedback(req.user?.id);
+            res.json(feedback);
+            return;
+        }
+
+        let limit: number | undefined;
+
+        if (typeof limitParam === "string") {
+            const parsedLimit = Number.parseInt(limitParam, 10);
+
+            if (Number.isNaN(parsedLimit) || parsedLimit < 1) {
+                res.status(400).json({ error: "Invalid limit" });
+                return;
+            }
+
+            limit = parsedLimit;
+        }
+
+        if (
+            typeof sortParam === "string" &&
+            !FeedbackService.isValidSort(sortParam)
+        ) {
+            res.status(400).json({ error: "Invalid sort" });
+            return;
+        }
+
+        if (
+            typeof categoryParam === "string" &&
+            categoryParam !== "all" &&
+            !FeedbackService.isValidCategory(categoryParam)
+        ) {
+            res.status(400).json({ error: "Invalid category" });
+            return;
+        }
+
+        if (
+            typeof statusParam === "string" &&
+            !FeedbackService.isValidStatus(statusParam)
+        ) {
+            res.status(400).json({ error: "Invalid status" });
+            return;
+        }
+
+        const sort =
+            typeof sortParam === "string" &&
+            FeedbackService.isValidSort(sortParam)
+                ? sortParam
+                : undefined;
+
+        const category =
+            typeof categoryParam === "string" &&
+            (categoryParam === "all" ||
+                FeedbackService.isValidCategory(categoryParam))
+                ? categoryParam
+                : undefined;
+
+        const status =
+            typeof statusParam === "string" &&
+            FeedbackService.isValidStatus(statusParam)
+                ? statusParam
+                : undefined;
+
+        const cursor =
+            typeof cursorParam === "string" ? cursorParam : undefined;
+
+        const feedback = await FeedbackService.getPaginatedFeedback(
+            {
+                limit,
+                cursor,
+                sort,
+                category,
+                status,
+            },
+            req.user?.id,
+        );
+
         res.json(feedback);
     } catch (error) {
+        if (error instanceof Error && error.message === "INVALID_CURSOR") {
+            res.status(400).json({ error: "Invalid cursor" });
+            return;
+        }
+
         console.error("GET all feedback error:", error);
         res.status(500).json({ error: "Error fetching data" });
     }
