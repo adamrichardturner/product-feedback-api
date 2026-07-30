@@ -84,8 +84,7 @@ const DEMO_USERS: SeedUser[] = [
 const SEED_FEEDBACK: SeedFeedback[] = [
     {
         title: "Add dark mode support",
-        detail:
-            "Allow users to switch between light and dark themes across the dashboard and roadmap views.",
+        detail: "Allow users to switch between light and dark themes across the dashboard and roadmap views.",
         category: "feature",
         status: "suggestion",
         order: null,
@@ -94,8 +93,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Improve mobile navigation",
-        detail:
-            "The mobile menu is hard to reach with one hand and needs clearer hierarchy between filters and sorting.",
+        detail: "The mobile menu is hard to reach with one hand and needs clearer hierarchy between filters and sorting.",
         category: "ux",
         status: "suggestion",
         order: null,
@@ -104,8 +102,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Filter chips overflow on small screens",
-        detail:
-            "Category chips wrap awkwardly on phones and clip the last option when the viewport is narrow.",
+        detail: "Category chips wrap awkwardly on phones and clip the last option when the viewport is narrow.",
         category: "ui",
         status: "suggestion",
         order: null,
@@ -114,8 +111,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Keyboard shortcut for upvote",
-        detail:
-            "Add a shortcut so power users can upvote feedback without reaching for the mouse.",
+        detail: "Add a shortcut so power users can upvote feedback without reaching for the mouse.",
         category: "enhancement",
         status: "suggestion",
         order: null,
@@ -124,8 +120,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Allow multi-select category filters",
-        detail:
-            "Users often want to combine Bug and UI filters instead of choosing only one at a time.",
+        detail: "Users often want to combine Bug and UI filters instead of choosing only one at a time.",
         category: "feature",
         status: "suggestion",
         order: null,
@@ -134,8 +129,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Search feedback by keyword",
-        detail:
-            "A search box would help when the suggestion list grows past a few dozen items.",
+        detail: "A search box would help when the suggestion list grows past a few dozen items.",
         category: "feature",
         status: "suggestion",
         order: null,
@@ -144,8 +138,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Show relative timestamps",
-        detail:
-            "Display '2 hours ago' instead of raw dates on suggestion cards and comments.",
+        detail: "Display '2 hours ago' instead of raw dates on suggestion cards and comments.",
         category: "ux",
         status: "suggestion",
         order: null,
@@ -154,8 +147,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Add empty state illustration",
-        detail:
-            "When filters return no results, show a clearer empty state with a one-click reset action.",
+        detail: "When filters return no results, show a clearer empty state with a one-click reset action.",
         category: "ui",
         status: "suggestion",
         order: null,
@@ -164,8 +156,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Quiet hours for notifications",
-        detail:
-            "Pause comment notification emails overnight so teams are not woken by late replies.",
+        detail: "Pause comment notification emails overnight so teams are not woken by late replies.",
         category: "enhancement",
         status: "suggestion",
         order: null,
@@ -174,8 +165,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Pin important suggestions",
-        detail:
-            "Let admins pin a few high-priority items to the top of the suggestions list.",
+        detail: "Let admins pin a few high-priority items to the top of the suggestions list.",
         category: "feature",
         status: "suggestion",
         order: null,
@@ -184,8 +174,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Inline image attachments on feedback",
-        detail:
-            "Allow attaching screenshots when creating feedback so context is clearer for reviewers.",
+        detail: "Allow attaching screenshots when creating feedback so context is clearer for reviewers.",
         category: "feature",
         status: "suggestion",
         order: null,
@@ -194,8 +183,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Sort by newest comments",
-        detail:
-            "Add a sort option that surfaces suggestions with the most recent discussion activity.",
+        detail: "Add a sort option that surfaces suggestions with the most recent discussion activity.",
         category: "enhancement",
         status: "suggestion",
         order: null,
@@ -204,8 +192,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Fix filter chip overflow",
-        detail:
-            "Category chips wrap awkwardly on smaller screens and clip the last option on the roadmap filters.",
+        detail: "Category chips wrap awkwardly on smaller screens and clip the last option on the roadmap filters.",
         category: "ui",
         status: "planned",
         order: 1,
@@ -214,8 +201,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Bulk status updates",
-        detail:
-            "Allow product managers to move several suggestions into Planned in one action.",
+        detail: "Allow product managers to move several suggestions into Planned in one action.",
         category: "feature",
         status: "planned",
         order: 2,
@@ -224,8 +210,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Mention teammates in comments",
-        detail:
-            "Support @mentions so the right person gets notified about a reply without leaving the thread.",
+        detail: "Support @mentions so the right person gets notified about a reply without leaving the thread.",
         category: "enhancement",
         status: "planned",
         order: 3,
@@ -234,8 +219,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Add feedback tags",
-        detail:
-            "Optional tags would help group related requests beyond the main category filter.",
+        detail: "Optional tags would help group related requests beyond the main category filter.",
         category: "feature",
         status: "planned",
         order: 4,
@@ -244,8 +228,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Email digest of weekly activity",
-        detail:
-            "Send a weekly summary of new suggestions, status changes, and top upvoted items.",
+        detail: "Send a weekly summary of new suggestions, status changes, and top upvoted items.",
         category: "feature",
         status: "planned",
         order: 5,
@@ -254,8 +237,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Comments fail to nest replies",
-        detail:
-            "Replying to a reply sometimes posts as a top-level comment instead of nesting under the parent.",
+        detail: "Replying to a reply sometimes posts as a top-level comment instead of nesting under the parent.",
         category: "bug",
         status: "progress",
         order: 1,
@@ -264,8 +246,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Roadmap drag animation polish",
-        detail:
-            "Smooth the drag preview and drop highlight on the roadmap board for clearer placement feedback.",
+        detail: "Smooth the drag preview and drop highlight on the roadmap board for clearer placement feedback.",
         category: "ui",
         status: "progress",
         order: 2,
@@ -274,8 +255,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Persist roadmap column order",
-        detail:
-            "Column order resets after refresh even though the status update succeeds on the server.",
+        detail: "Column order resets after refresh even though the status update succeeds on the server.",
         category: "bug",
         status: "progress",
         order: 3,
@@ -284,8 +264,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Toast confirmations after edits",
-        detail:
-            "Show a short confirmation when roadmap cards are moved or feedback is saved.",
+        detail: "Show a short confirmation when roadmap cards are moved or feedback is saved.",
         category: "ux",
         status: "progress",
         order: 4,
@@ -294,8 +273,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Duplicate feedback detection",
-        detail:
-            "Warn when a new suggestion title is very similar to an existing item before submission.",
+        detail: "Warn when a new suggestion title is very similar to an existing item before submission.",
         category: "enhancement",
         status: "progress",
         order: 5,
@@ -304,8 +282,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Export feedback as CSV",
-        detail:
-            "Product managers want to export filtered feedback lists for stakeholder reviews.",
+        detail: "Product managers want to export filtered feedback lists for stakeholder reviews.",
         category: "feature",
         status: "live",
         order: 1,
@@ -314,8 +291,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Show comment count on cards",
-        detail:
-            "Surface comment totals on suggestion cards so busy threads stand out at a glance.",
+        detail: "Surface comment totals on suggestion cards so busy threads stand out at a glance.",
         category: "enhancement",
         status: "live",
         order: 2,
@@ -324,8 +300,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Category colour coding",
-        detail:
-            "Give each category a consistent colour so scanning the board and suggestion list is faster.",
+        detail: "Give each category a consistent colour so scanning the board and suggestion list is faster.",
         category: "ui",
         status: "live",
         order: 3,
@@ -334,8 +309,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Shareable feedback links",
-        detail:
-            "Copy a direct link to any feedback item from the detail page for sharing in Slack.",
+        detail: "Copy a direct link to any feedback item from the detail page for sharing in Slack.",
         category: "feature",
         status: "live",
         order: 4,
@@ -344,8 +318,7 @@ const SEED_FEEDBACK: SeedFeedback[] = [
     },
     {
         title: "Vote count animation",
-        detail:
-            "Animate the upvote counter when a vote is added or removed so the change feels immediate.",
+        detail: "Animate the upvote counter when a vote is added or removed so the change feels immediate.",
         category: "ui",
         status: "live",
         order: 5,
@@ -439,7 +412,8 @@ const SEED_COMMENTS: SeedComment[] = [
     {
         feedbackTitle: "Search feedback by keyword",
         authorEmail: ADAM,
-        content: "Would love to filter by author as a second step after search.",
+        content:
+            "Would love to filter by author as a second step after search.",
     },
 
     // Pin important suggestions
@@ -549,7 +523,8 @@ const SEED_COMMENTS: SeedComment[] = [
     {
         feedbackTitle: "Persist roadmap column order",
         authorEmail: SARAH,
-        content: "Happy to pair on the optimistic cache update once the API lands.",
+        content:
+            "Happy to pair on the optimistic cache update once the API lands.",
         parentContent:
             "Looks like we update status but never persist the order column on drop.",
     },
@@ -747,7 +722,8 @@ const SEED_COMMENTS: SeedComment[] = [
     {
         feedbackTitle: "Vote count animation",
         authorEmail: SARAH,
-        content: "Nice touch — the bump animation makes voting feel responsive.",
+        content:
+            "Nice touch — the bump animation makes voting feel responsive.",
     },
     {
         feedbackTitle: "Vote count animation",

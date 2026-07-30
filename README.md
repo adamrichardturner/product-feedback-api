@@ -125,7 +125,7 @@ All routes are mounted under `/api`.
 
 ### Feedback
 
-- `GET /api/feedback` — list feedback with upvote and comment metadata
+- `GET /api/feedback` — list feedback with upvote and comment metadata. Without query params, returns the full array (used by the roadmap). With pagination params (`limit`, `cursor`, `sort`, `category`, `status`), returns a cursor-paginated envelope: `{ data, nextCursor, hasMore, total, statusCounts }`
 - `POST /api/feedback` — create feedback (auth required)
 - `PUT /api/feedback` — update feedback fields including roadmap status/order (auth required)
 - `DELETE /api/feedback` — delete feedback and related votes (auth required)

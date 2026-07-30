@@ -2,9 +2,13 @@ import {
     CreateCommentInput,
     CreateFeedbackInput,
     FeedbackCategory,
+    FeedbackCursorPayload,
+    FeedbackListQuery,
     FeedbackResponse,
+    FeedbackSortOption,
     FeedbackStatus,
     NestedComment,
+    PaginatedFeedbackResponse,
     UpdateFeedbackInput,
 } from "../models";
 import { CommentRepository } from "../repositories/commentRepository";
@@ -26,12 +30,53 @@ const ALLOWED_STATUSES = new Set<FeedbackStatus>([
     "live",
 ]);
 
+const ALLOWED_SORTS = new Set<FeedbackSortOption>([
+    "mostUpvotes",
+    "leastUpvotes",
+    "mostComments",
+    "leastComments",
+]);
+
+const DEFAULT_PAGE_LIMIT = 8;
+const MAX_PAGE_LIMIT = 50;
+
 function toIsoString(value: Date | string): string {
     if (value instanceof Date) {
         return value.toISOString();
     }
 
     return new Date(value).toISOString();
+}
+
+function encodeCursor(payload: FeedbackCursorPayload): string {
+    return Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
+}
+
+function decodeCursor(cursor: string): FeedbackCursorPayload | null {
+    try {
+        const parsed = JSON.parse(
+            Buffer.from(cursor, "base64url").toString("utf8"),
+        ) as Partial<FeedbackCursorPayload>;
+
+        if (
+            typeof parsed.id !== "string" ||
+            typeof parsed.upvotes !== "number" ||
+            typeof parsed.comments !== "number" ||
+            typeof parsed.sort !== "string" ||
+            !ALLOWED_SORTS.has(parsed.sort)
+        ) {
+            return null;
+        }
+
+        return {
+            id: parsed.id,
+            upvotes: parsed.upvotes,
+            comments: parsed.comments,
+            sort: parsed.sort,
+        };
+    } catch {
+        return null;
+    }
 }
 
 export class FeedbackService {
@@ -41,6 +86,10 @@ export class FeedbackService {
 
     static isValidStatus(value: string): value is FeedbackStatus {
         return ALLOWED_STATUSES.has(value as FeedbackStatus);
+    }
+
+    static isValidSort(value: string): value is FeedbackSortOption {
+        return ALLOWED_SORTS.has(value as FeedbackSortOption);
     }
 
     static async getAllFeedback(userId?: string): Promise<FeedbackResponse[]> {
@@ -66,6 +115,82 @@ export class FeedbackService {
                 : false,
             order: item.order,
         }));
+    }
+
+    static async getPaginatedFeedback(
+        query: FeedbackListQuery,
+        userId?: string,
+    ): Promise<PaginatedFeedbackResponse> {
+        const sort = query.sort ?? "mostUpvotes";
+        const limit = Math.min(
+            Math.max(query.limit ?? DEFAULT_PAGE_LIMIT, 1),
+            MAX_PAGE_LIMIT,
+        );
+        const category = query.category ?? "all";
+        const decodedCursor = query.cursor ? decodeCursor(query.cursor) : null;
+
+        if (query.cursor && !decodedCursor) {
+            throw new Error("INVALID_CURSOR");
+        }
+
+        if (decodedCursor && decodedCursor.sort !== sort) {
+            throw new Error("INVALID_CURSOR");
+        }
+
+        const [feedbackItems, total, statusCounts] = await Promise.all([
+            FeedbackRepository.findPaginatedWithVotes({
+                limit,
+                sort,
+                category,
+                status: query.status,
+                cursor: decodedCursor,
+            }),
+            FeedbackRepository.countFiltered({
+                category,
+                status: query.status,
+            }),
+            FeedbackRepository.getStatusCounts(),
+        ]);
+
+        const hasMore = feedbackItems.length > limit;
+        const pageItems = hasMore
+            ? feedbackItems.slice(0, limit)
+            : feedbackItems;
+        const lastItem = pageItems[pageItems.length - 1];
+
+        const nextCursor =
+            hasMore && lastItem
+                ? encodeCursor({
+                      id: lastItem.id,
+                      upvotes: lastItem.upvotes,
+                      comments: lastItem.comment_count,
+                      sort,
+                  })
+                : null;
+
+        return {
+            data: pageItems.map((item) => ({
+                id: item.id,
+                user_id: item.user_id,
+                inserted_at: toIsoString(item.inserted_at),
+                updated_at: toIsoString(item.updated_at),
+                title: item.title,
+                category: item.category,
+                comments: item.comment_count,
+                status: item.status,
+                upvotes: item.upvotes,
+                votes: item.votes,
+                detail: item.detail,
+                upvotedByUser: userId
+                    ? item.votes.some((vote) => vote.user_id === userId)
+                    : false,
+                order: item.order,
+            })),
+            nextCursor,
+            hasMore,
+            total,
+            statusCounts,
+        };
     }
 
     static async getSingleFeedback(
