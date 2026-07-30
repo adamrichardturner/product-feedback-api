@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 10
     ports:
-      - "5433:5432"
+      - "${DB_PORT:-5435}:5432"
 
   api:
     build: .
@@ -30,8 +30,9 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       NODE_ENV: production
+      PORT: ${PORT:-3005}
     ports:
-      - "3002:3002"
+      - "${PORT:-3005}:${PORT:-3005}"
     restart: unless-stopped
 
 volumes:

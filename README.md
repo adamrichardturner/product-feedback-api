@@ -52,7 +52,7 @@ The matching frontend repository is [product-feedback](https://github.com/adamri
 
 ```env
 DB_HOST=localhost
-DB_PORT=5433
+DB_PORT=5435
 DB_USER=feedback_admin
 DB_PASSWORD=feedback_dev_password
 DB_NAME=product_feedback
@@ -67,13 +67,13 @@ DEMO_PASSWORD=demo
 
 ### `.env.production.local`
 
-Use the same keys with production values. Set `NODE_ENV=production` and point `ALLOWED_ORIGINS` / `FRONTEND_URL` at the live frontend origin.
+Use the same keys with production values. Set `NODE_ENV=production`, `PORT=3005`, `DB_PORT=5435`, and point `ALLOWED_ORIGINS` / `FRONTEND_URL` at the live frontend origin.
 
 | Variable | Purpose |
 | --- | --- |
 | `DB_*` | PostgreSQL connection settings |
 | `JWT_SECRET` | Signs and verifies the auth cookie |
-| `PORT` | API listen port (default `3002`) |
+| `PORT` | API listen port (default `3002` locally, `3005` in production) |
 | `DEMO_EMAIL` / `DEMO_PASSWORD` | Demo login credentials used by seed and auth |
 | `ALLOWED_ORIGINS` | CORS origin for the frontend |
 
@@ -147,7 +147,7 @@ Recommended flow with Docker for the backend:
 npm run docker:dev
 ```
 
-The API listens on `http://localhost:3002`. Postgres is published on host port `5433`.
+The API listens on `http://localhost:3002`. Postgres is published on host port `5435`.
 
 Then start the frontend from the product-feedback repository with `npm run dev`.
 

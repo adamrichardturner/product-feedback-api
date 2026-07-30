@@ -6,7 +6,7 @@ interface SeedUser {
     password: string;
     username: string;
     fullName: string;
-    avatarSeed: string;
+    avatarUrl: string;
 }
 
 interface SeedFeedback {
@@ -32,28 +32,28 @@ const DEMO_USERS: SeedUser[] = [
         password: process.env.DEMO_PASSWORD ?? "demo",
         username: "demouser",
         fullName: "Demo User",
-        avatarSeed: "DemoUser",
+        avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     {
         email: "ella.thompson@example.co.uk",
         password: "password123",
         username: "ellathompson",
         fullName: "Ella Thompson",
-        avatarSeed: "EllaThompson",
+        avatarUrl: "https://randomuser.me/api/portraits/women/44.jpg",
     },
     {
         email: "james.wright@example.co.uk",
         password: "password123",
         username: "jameswright",
         fullName: "James Wright",
-        avatarSeed: "JamesWright",
+        avatarUrl: "https://randomuser.me/api/portraits/men/75.jpg",
     },
     {
         email: "sofia.patel@example.co.uk",
         password: "password123",
         username: "sofiapatel",
         fullName: "Sofia Patel",
-        avatarSeed: "SofiaPatel",
+        avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg",
     },
 ];
 
@@ -170,10 +170,6 @@ const SEED_COMMENTS: SeedComment[] = [
     },
 ];
 
-function avatarUrl(seed: string): string {
-    return `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(seed)}`;
-}
-
 async function ensureUsers(): Promise<Record<string, string>> {
     const userIdsByEmail: Record<string, string> = {};
 
@@ -184,7 +180,18 @@ async function ensureUsers(): Promise<Record<string, string>> {
         );
 
         if (existing.rows[0]) {
-            userIdsByEmail[user.email] = existing.rows[0].id;
+            const userId = existing.rows[0].id;
+            userIdsByEmail[user.email] = userId;
+
+            await pool.query(
+                `UPDATE profiles
+                 SET avatar_url = $1,
+                     username = $2,
+                     full_name = $3,
+                     updated_at = CURRENT_TIMESTAMP
+                 WHERE id = $4`,
+                [user.avatarUrl, user.username, user.fullName, userId],
+            );
             continue;
         }
 
@@ -203,7 +210,7 @@ async function ensureUsers(): Promise<Record<string, string>> {
             `INSERT INTO profiles (id, username, full_name, avatar_url)
              VALUES ($1, $2, $3, $4)
              ON CONFLICT (id) DO NOTHING`,
-            [userId, user.username, user.fullName, avatarUrl(user.avatarSeed)],
+            [userId, user.username, user.fullName, user.avatarUrl],
         );
 
         console.log(`Created user ${user.email}`);
