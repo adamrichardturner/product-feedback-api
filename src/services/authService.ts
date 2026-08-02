@@ -1,6 +1,35 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { AuthUser } from "../models";
 import { UserRepository } from "../repositories/userRepository";
+
+const TOKEN_EXPIRES_IN = "24h";
+
+function getJwtSecret(): string {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        throw new Error("JWT_SECRET is not configured");
+    }
+    return secret;
+}
+
+function isAuthTokenPayload(value: unknown): value is AuthUser {
+    if (typeof value !== "object" || value === null) {
+        return false;
+    }
+
+    if (!("id" in value) || !("email" in value)) {
+        return false;
+    }
+
+    return typeof value.id === "string" && typeof value.email === "string";
+}
+
+function signAuthToken(payload: AuthUser): string {
+    return jwt.sign(payload, getJwtSecret(), {
+        expiresIn: TOKEN_EXPIRES_IN,
+    });
+}
 
 export class AuthService {
     static async demoLogin(): Promise<{
@@ -33,11 +62,7 @@ export class AuthService {
             return null;
         }
 
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            process.env.JWT_SECRET as string,
-            { expiresIn: "24h" },
-        );
+        const token = signAuthToken({ id: user.id, email: user.email });
 
         return {
             token,
@@ -47,6 +72,23 @@ export class AuthService {
                 aud: "authenticated",
             },
         };
+    }
+
+    static refreshToken(token: string): string | null {
+        try {
+            const decoded = jwt.verify(token, getJwtSecret());
+
+            if (!isAuthTokenPayload(decoded)) {
+                return null;
+            }
+
+            return signAuthToken({
+                id: decoded.id,
+                email: decoded.email,
+            });
+        } catch {
+            return null;
+        }
     }
 
     static async getCurrentProfile(userId: string) {
