@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/authService";
 import { CommentService, FeedbackService } from "../services/feedbackService";
 import { FeedbackCategory, FeedbackStatus } from "../models";
+import { clearAuthCookie, setAuthCookie } from "../utils/authCookies";
 
 export const demoLogin = async (_req: Request, res: Response) => {
     try {
@@ -12,16 +13,7 @@ export const demoLogin = async (_req: Request, res: Response) => {
             return;
         }
 
-        const isProduction = process.env.NODE_ENV === "production";
-
-        res.cookie("token", result.token, {
-            ...(isProduction ? { domain: ".adamrichardturner.dev" } : {}),
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
-            maxAge: 24 * 60 * 60 * 1000,
-            path: "/",
-        });
+        setAuthCookie(res, result.token);
 
         res.json({
             message: "Logged in successfully",
@@ -33,17 +25,30 @@ export const demoLogin = async (_req: Request, res: Response) => {
     }
 };
 
+export const refreshAuth = async (req: Request, res: Response) => {
+    const tokenCookie = req.cookies.token;
+    const token = typeof tokenCookie === "string" ? tokenCookie : undefined;
+
+    if (!token) {
+        clearAuthCookie(res);
+        res.status(401).json({ error: "No token, authorization denied" });
+        return;
+    }
+
+    const refreshedToken = AuthService.refreshToken(token);
+
+    if (!refreshedToken) {
+        clearAuthCookie(res);
+        res.status(401).json({ error: "Token is not valid" });
+        return;
+    }
+
+    setAuthCookie(res, refreshedToken);
+    res.json({ success: true });
+};
+
 export const logout = async (_req: Request, res: Response) => {
-    const isProduction = process.env.NODE_ENV === "production";
-
-    res.clearCookie("token", {
-        ...(isProduction ? { domain: ".adamrichardturner.dev" } : {}),
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/",
-    });
-
+    clearAuthCookie(res);
     res.json({ message: "Logged out successfully" });
 };
 

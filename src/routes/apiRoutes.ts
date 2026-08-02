@@ -10,6 +10,7 @@ import {
     getCurrentUser,
     getSingleFeedback,
     logout,
+    refreshAuth,
     toggleUpvote,
     updateFeedback,
 } from "../controllers/feedbackController";
@@ -17,6 +18,7 @@ import {
 const router = Router();
 
 router.post("/auth/demo", demoLogin);
+router.post("/auth/refresh", refreshAuth);
 router.post("/auth/signout", logout);
 router.get("/user", auth, getCurrentUser);
 
